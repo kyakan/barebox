@@ -91,7 +91,7 @@ __start:
 
 	li	t0, GT_LD(0x18200000)
 	sw	t0, GT_PCI0M1LD_OFS(t1)
-	li	t0, GT_LD(0x0bcfffff)
+	li	t0, GT_LD(0x1bdfffff)
 	sw	t0, GT_PCI0M1HD_OFS(t1)
 
 	mips_nmon
