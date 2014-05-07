@@ -1,6 +1,7 @@
 #ifndef _ASM_GENERIC_BITOPS_FFS_H_
 #define _ASM_GENERIC_BITOPS_FFS_H_
 
+#ifndef __ASSEMBLY__
 /**
  * ffs - find first bit set
  * @x: the word to search
@@ -37,5 +38,6 @@ static inline int ffs(int x)
 	}
 	return r;
 }
+#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_GENERIC_BITOPS_FFS_H_ */

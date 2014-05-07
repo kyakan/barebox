@@ -5,9 +5,6 @@
 #include <asm/regdef.h>
 #include <mach/ar71xx_regs.h>
 
-/* replicated define because linux/bitops.h cannot be included in assembly */
-#define BIT(nr)  (1 << (nr))
-
 #define RESET_REG_BOOTSTRAP	(KSEG1 | AR71XX_RESET_BASE | \
 		AR933X_RESET_REG_BOOTSTRAP)
 

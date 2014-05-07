@@ -1,6 +1,7 @@
 #ifndef _ASM_GENERIC_BITOPS_FLS_H_
 #define _ASM_GENERIC_BITOPS_FLS_H_
 
+#ifndef __ASSEMBLY__
 /**
  * fls - find last (most-significant) bit set
  * @x: the word to search
@@ -37,5 +38,6 @@ static inline int fls(int x)
 	}
 	return r;
 }
+#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_GENERIC_BITOPS_FLS_H_ */

@@ -3,6 +3,7 @@
 
 #include <asm/types.h>
 
+#ifndef __ASSEMBLY__
 /**
  * __ffs - find first bit in word.
  * @word: The word to search
@@ -39,5 +40,6 @@ static inline unsigned long __ffs(unsigned long word)
 		num += 1;
 	return num;
 }
+#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_GENERIC_BITOPS___FFS_H_ */

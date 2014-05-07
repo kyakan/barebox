@@ -3,6 +3,7 @@
 
 #include <asm/types.h>
 
+#ifndef __ASSEMBLY__
 /**
  * __fls - find last (most-significant) set bit in a long word
  * @word: the word to search
@@ -39,5 +40,6 @@ static inline unsigned long __fls(unsigned long word)
 		num -= 1;
 	return num;
 }
+#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_GENERIC_BITOPS___FLS_H_ */
