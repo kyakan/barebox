@@ -16,27 +16,11 @@
  */
 
 #include <common.h>
-#include <types.h>
-#include <driver.h>
 #include <init.h>
-#include <ns16550.h>
-#include <mach/hardware.h>
-#include <io.h>
-#include <asm/common.h>
-
-static struct NS16550_plat serial_plat = {
-	.clock = 25804800,
-	.shift = 0,
-};
 
 static int dir320_console_init(void)
 {
-	barebox_set_model("D-Link DIR-320");
 	barebox_set_hostname("dir320");
-
-	/* Register the serial port */
-	add_ns16550_device(DEVICE_ID_DYNAMIC, DEBUG_LL_UART_ADDR, 8,
-			IORESOURCE_MEM | IORESOURCE_MEM_8BIT, &serial_plat);
 
 	return 0;
 }
