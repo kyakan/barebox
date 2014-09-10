@@ -707,16 +707,30 @@ static int dm9k_init_dev(struct eth_device *edev)
 	return 0;
 }
 
+static struct dm9000_platform_data *dm9000_parse_dt(struct device_d *dev)
+{
+	struct dm9000_platform_data *pdata;
+	struct device_node *np = dev->device_node;
+
+	if (!IS_ENABLED(CONFIG_OF) || !np)
+		return NULL;
+
+	pdata = xzalloc(sizeof(*pdata));
+
+	pdata->srom = 0;
+
+	return pdata;
+}
+
 static int dm9k_probe(struct device_d *dev)
 {
 	unsigned io_mode;
 	struct eth_device *edev;
 	struct dm9k *priv;
-	struct dm9000_platform_data *pdata;
+	struct dm9000_platform_data *pdata = dev->platform_data;
 
-	if (!dev->platform_data) {
-		dev_err(dev, "No platform_data\n");
-		return -ENODEV;
+	if (!pdata) {
+		pdata = dm9000_parse_dt(dev);
 	}
 
 	if (dev->num_resources < 2) {
@@ -727,11 +741,23 @@ static int dm9k_probe(struct device_d *dev)
 	edev = xzalloc(sizeof(struct eth_device) + sizeof(struct dm9k));
 	edev->priv = (struct dm9k *)(edev + 1);
 
-	pdata = dev->platform_data;
-
 	priv = edev->priv;
 
-	priv->buswidth = dev->resource[0].flags & IORESOURCE_MEM_TYPE_MASK;
+	switch (resource_size(&dev->resource[0])) {
+	case 1:
+		priv->buswidth = IORESOURCE_MEM_8BIT;
+		break;
+	case 2:
+		priv->buswidth = IORESOURCE_MEM_16BIT;
+		break;
+	case 4:
+		priv->buswidth = IORESOURCE_MEM_32BIT;
+		break;
+	default:
+		dev_err(dev, "Wrong io resource size\n");
+		priv->buswidth = 0;
+	}
+
 	priv->iodata = dev_request_mem_region(dev, 1);
 	if (!priv->iodata)
 		return -EBUSY;
@@ -791,8 +817,14 @@ static int dm9k_probe(struct device_d *dev)
 	return 0;
 }
 
+static struct of_device_id dm9000_of_matches[] = {
+	{ .compatible = "davicom,dm9000", },
+	{ /* sentinel */ }
+};
+
 static struct driver_d dm9k_driver = {
 	.name  = "dm9000",
 	.probe = dm9k_probe,
+	.of_compatible = DRV_OF_COMPAT(dm9000_of_matches),
 };
 device_platform_driver(dm9k_driver);
